@@ -1,5 +1,8 @@
 import telebot
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from sympy import *
 from estrellas import estrellas, constelacion
+import RRNH 
 
 bot = telebot.TeleBot("6141107908:AAEfYAug7bei9kW80EWyvSxlb8jFc9E7kQ4")
 
@@ -68,6 +71,115 @@ def osa_mayor(message):
 @bot.message_handler(commands=["osa_menor"])
 def osa_menor(message):
     grafico_constelacion("Osa menor", message.chat.id)
+
+@bot.message_handler(commands=["rrnh"])
+def rrnh(message):
+    bot.send_message(message.chat.id, "¿Cuál es el grado de la función recurrente?")
+    bot.register_next_step_handler(message, pedir_grado)
+
+def pedir_grado(message):
+    try:
+        RRNH.k = int(message.text)
+        if RRNH.k <= 0:
+            bot.send_message(message.chat.id, "El grado debe ser mayor que 0😾, intenta de nuevo")
+            bot.register_next_step_handler(message, pedir_grado)
+        else:
+            bot.send_message(message.chat.id, "¿Qué tipo de termino no homogeneo es g(n)?🥸\n\t1. Constante\n\t2. Valor n\n\t3. Valor n^2 \n\t4. Raíz de grado n")
+            bot.register_next_step_handler(message, grado)
+    except ValueError:
+        print("aca")
+        bot.send_message(message.chat.id, "Ese tipo de dato no es correcto, miaw miaw! 😿\nIntenta de nuevo con un número")
+        rrnh(message)
+
+def grado(message):
+    try:
+        RRNH.dec_g = int(message.text)
+        if message.text=="1":
+            bot.send_message(message.chat.id, "¿Cuál es el valor de la constante?")
+            bot.register_next_step_handler(message, constante)
+        elif message.text == "2":
+            RRNH.g = RRNH.n
+            pedir_condiciones(message)
+        elif message.text == "3":
+            RRNH.g = RRNH.n**2
+            pedir_condiciones(message)
+        elif message.text == "4":
+            bot.send_message(message.chat.id, "¿Cuál es el valor de la raíz? 🤓")
+            bot.register_next_step_handler(message, valor_R)
+        else:
+            bot.send_message(message.chat.id, "Solo hay 4 opciones, selecciona una (escribe el número) 😾")
+            bot.register_next_step_handler(message, grado)
+    except ValueError:
+        bot.send_message(message.chat.id, "Ups, algo pasó con ese dato, intenta otra vez")
+        bot.register_next_step_handler(message, grado)
+    
+
+def constante(message):
+    try:
+        RRNH.g = int(message.text)
+        pedir_condiciones(message)
+    except ValueError:
+        bot.send_message(message.chat.id, "Ese tipo de dato no es correcto, miaw miaw! 😿\nIntenta de nuevo con un número")
+        bot.register_next_step_handler(message, constante)
+
+
+def valor_R(message):
+    try:
+        RRNH.R = int(message.text)
+        RRNH.g = RRNH.R**RRNH.n
+        pedir_condiciones(message)
+    except ValueError:
+        bot.send_message(message.chat.id, "Ese tipo de dato no es correcto, miaw miaw! 😿\nIntenta de nuevo con un número")
+        bot.register_next_step_handler(message, valor_R)
+
+def pedir_coeficientes(message):
+    bot.send_message(message.chat.id, "¿Cuáles son los coeficientes de " + "".join("f(n -" + str(i) +"), " for i in range(RRNH.k, 1, -1)) + f" y f(n-1)? Ingresalos separados por comas.")
+    bot.register_next_step_handler(message, coeficientes)
+
+def coeficientes(message):
+    RRNH.coeff = []
+    check = true
+    try:
+        coef_ingresado = message.text.split(",")
+        for c in coef_ingresado: 
+            RRNH.coeff.append(-int(c))
+
+        if len(RRNH.coeff)!=RRNH.k:
+            bot.send_message(message.chat.id, f"Jum, la cantidad de números ingresados es {len(RRNH.coeff)} y el grado de la función es {RRNH.k}, deberían ser iguales, vuelve a ingresar los números 🤔")
+            bot.register_next_step_handler(message, coeficientes)
+            RRNH.coeff = []
+            check = false
+        
+        if check: 
+            RRNH.principal_rrnh()
+        
+        
+    except ValueError:
+        bot.send_message(message.chat.id, f"Hubo un error, recuerda que debes ingresar números separados por comas. Intenta de nuevo 🤔")
+        bot.register_next_step_handler(message, coeficientes)
+    
+
+def pedir_condiciones(message):
+    bot.send_message(message.chat.id, "¿Cuáles son los valores de " + "".join("f(" + str(i) +"), " for i in range(RRNH.k-1)) + f" y f({RRNH.k-1})? Ingresalos separados por espacios o comas.")
+    bot.register_next_step_handler(message, condiciones_iniciales)
+
+def condiciones_iniciales(message):
+    RRNH.init = []
+    check = true
+    try:
+        condiciones = message.text.split(",")
+        for condicion in condiciones: 
+            RRNH.init.append(int(condicion))
+        if len(RRNH.init)!=RRNH.k:
+            bot.send_message(message.chat.id, f"Jum, la cantidad de números ingresados es {len(RRNH.init)} y el grado de la función es {RRNH.k}, deberían ser iguales, vuelve a ingresar los números 🤔")
+            bot.register_next_step_handler(message, condiciones_iniciales)
+            RRNH.init = []
+            check = false
+        if check: 
+            pedir_coeficientes(message)
+    except ValueError:
+        bot.send_message(message.chat.id, f"Hubo un error, recuerda que debes ingresar números separados por comas. Intenta de nuevo 🤔")
+        bot.register_next_step_handler(message, condiciones_iniciales)
 
 
 @bot.message_handler(func=lambda message:True)

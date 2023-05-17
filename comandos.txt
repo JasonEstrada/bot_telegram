@@ -11,3 +11,4 @@
 /hydra - Mostrar constelación Hydra
 /osa_mayor - Mostrar constelación Osa mayor
 /osa_menor - Mostrar constelación Osa menor
+/rrnh - Solucionar una relacion de recurrencia lineal, no homogénea, con coeficientes constantes
