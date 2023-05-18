@@ -9,6 +9,7 @@ from IPython.display import display, Math
 import matplotlib.pyplot as plt
 from sympy import latex
 
+#Global variables
 # Función para aproximar cada elemento de una lista a un cierto número de decimales
 def approx_list(lst, precision):
     return [np.round(x, precision) for x in lst]
