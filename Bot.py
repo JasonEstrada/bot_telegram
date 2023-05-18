@@ -8,10 +8,10 @@ bot = telebot.TeleBot("6141107908:AAEfYAug7bei9kW80EWyvSxlb8jFc9E7kQ4")
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    audio = open('bot_telegram/media/bienvenido.mp3', 'rb')
+    audio = open('media/bienvenido.mp3', 'rb')
     bot.send_audio(message.chat.id, audio)
     audio.close()
-    photo = open("bot_telegram\media\gato-baile.gif", 'rb')
+    photo = open("media\gato-baile.gif", 'rb')
     bot.send_animation(message.chat.id, photo)
     photo.close()
     bot.send_message(message.chat.id, "Miaw!👋😺, ¿cómo estás? Estos son los comandos disponibles:")
@@ -25,7 +25,7 @@ def ayuda(message):
 @bot.message_handler(commands=["commands"])
 def comandos(message):
     commands_list = ""
-    with open("bot_telegram\comandos.txt", "r", encoding="utf-8") as f:
+    with open("comandos.txt", "r", encoding="utf-8") as f:
         for line in f:
             commands_list += line
     bot.reply_to(message, commands_list)
@@ -153,6 +153,20 @@ def coeficientes(message):
         if check: 
             RRNH.principal_rrnh()
         
+        bot.send_message(message.chat.id, "Esta es la función recurrente que ingresaste: ")
+        bot.send_photo(message.chat.id, open('function.png', 'rb'))
+
+        bot.send_message(message.chat.id, "Esta es la solución homogénea que resulta en términos de b: ")
+        bot.send_photo(message.chat.id, open('sol_h.png', 'rb'))
+
+        bot.send_message(message.chat.id, "Esta es la solución particular que resulta del termino g(n): ")
+        bot.send_photo(message.chat.id, open('sol_p.png', 'rb'))
+
+        bot.send_message(message.chat.id, "Esta es la solución general de la función: ")
+        bot.send_photo(message.chat.id, open('expr.png', 'rb'))
+
+        bot.send_message(message.chat.id, "Esta es la solución no recurrente de la función en términos de n:")
+        bot.send_photo(message.chat.id, open('ec_sol.png', 'rb'))  
         
     except ValueError:
         bot.send_message(message.chat.id, f"Hubo un error, recuerda que debes ingresar números separados por comas. Intenta de nuevo 🤔")
@@ -177,6 +191,7 @@ def condiciones_iniciales(message):
             check = false
         if check: 
             pedir_coeficientes(message)
+
     except ValueError:
         bot.send_message(message.chat.id, f"Hubo un error, recuerda que debes ingresar números separados por comas. Intenta de nuevo 🤔")
         bot.register_next_step_handler(message, condiciones_iniciales)
