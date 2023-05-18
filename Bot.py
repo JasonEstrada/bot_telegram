@@ -158,9 +158,10 @@ def coeficientes(message):
 
         bot.send_message(message.chat.id, "Esta es la solución homogénea que resulta en términos de b: ")
         bot.send_photo(message.chat.id, open('sol_h.png', 'rb'))
-
-        bot.send_message(message.chat.id, "Esta es la solución particular que resulta del termino g(n): ")
-        bot.send_photo(message.chat.id, open('sol_p.png', 'rb'))
+        
+        if(RRNH.dec_g != 4):
+            bot.send_message(message.chat.id, "Esta es la solución particular que resulta del termino g(n): ")
+            bot.send_photo(message.chat.id, open('sol_p.png', 'rb'))
 
         bot.send_message(message.chat.id, "Esta es la solución general de la función: ")
         bot.send_photo(message.chat.id, open('expr.png', 'rb'))
