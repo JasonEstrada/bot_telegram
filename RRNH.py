@@ -190,37 +190,37 @@ def exp_particular(dec_g,expr, par):
     expr = parse_expr(expr)
   elif dec_g == 4:
     c = symbols('c')
-    cons = f'c*{R}**n'
+    cons = f'c*({R}**n)'
     cons = parse_expr(cons)
     equation = Eq(cons,par)
     solution = solve(equation, c)
-    sol_p = f'{solution[0]}*{R}**n'
+    sol_p = f'({R}**n)*({solution[0]})'
     expr = str(expr) + "+" +str(sol_p)
     expr = parse_expr(expr)
+    
+  if dec_g !=4:
+    # Ajustar el tamaño de la figura según la longitud de la expresión
+    longitud_expresion = len(latex(sol_p))
+    ancho_figura = longitud_expresion * 0.1
+    alto_figura = 1.5
 
-  # Ajustar el tamaño de la figura según la longitud de la expresión
-  longitud_expresion = len(latex(sol_p))
-  ancho_figura = longitud_expresion * 0.1
-  alto_figura = 1.5
+    # Crear una figura con el tamaño ajustado
+    fig = plt.figure(figsize=(ancho_figura, alto_figura))
 
-  # Crear una figura con el tamaño ajustado
-  fig = plt.figure(figsize=(ancho_figura, alto_figura))
+    # Agregar un texto con la función en modo LaTeX a la figura
+    plt.text(0.5, 0.5, "$f_{p}(n) = " + latex(sol_p) + "$", fontsize=16, ha='center')
 
-  # Agregar un texto con la función en modo LaTeX a la figura
-  plt.text(0.5, 0.5, "$f_{p}(n) = " + latex(sol_p) + "$", fontsize=16, ha='center')
+    # Ocultar los ejes de la figura
+    plt.axis('off')
 
-  # Ocultar los ejes de la figura
-  plt.axis('off')
-
-  # Guardar la figura en formato PNG
-  plt.savefig('sol_p.png', dpi=300, bbox_inches='tight')
-
-  return sol_p,expr
+    # Guardar la figura en formato PNG
+    plt.savefig('sol_p.png', dpi=300, bbox_inches='tight')
+  return expr
 
 def print_expr(expr):
   # Ajustar el tamaño de la figura según la longitud de la expresión
   longitud_expresion = len(latex(expr))
-  ancho_figura = longitud_expresion * 0.1
+  ancho_figura = longitud_expresion * 0.15
   alto_figura = 1.5
 
   # Crear una figura con el tamaño ajustado
@@ -245,7 +245,6 @@ def solution(expr,init):
   sol = solve(eqs, b)
   
   for key, value in sol.items():
-    print(value)
     val=str(value)
     if "I" in val:
       if "+" in val:
@@ -286,7 +285,6 @@ def solution(expr,init):
   plt.savefig('ec_sol.png', dpi=300, bbox_inches='tight') 
 
 
-
 #Listas necesarias
 coeff = []
 n = symbols('n')
@@ -323,8 +321,8 @@ def principal_rrnh():
   print(coeff)
   function = homogenea(g)   #Imprimir funcion original(function)
   par = particular(g,dec_g)  
-  print(par)
   expr = exp_homogenea()   #Imprimir foto solucion homogenea(expr)
-  sol_p,expr = exp_particular(dec_g,expr,par)  #Imprimir foto solucion particular(sol_p)
+  expr = exp_particular(dec_g,expr,par)  
+  print(expr) #Imprimir foto solucion particular(sol_p)
   print_expr(expr) #mandar la foto(Expresion final expr)
   solution(expr,init)  #mandar las dos fotos, la de la funcion original que ya fue antes guardada(function) y la solucion(ec_sol)
