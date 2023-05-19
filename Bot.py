@@ -19,7 +19,6 @@ def start(message):
 
 @bot.message_handler(commands=["help"])
 def ayuda(message):
-    print("entra 2")
     bot.reply_to(message, "Estas son las ayudas ... ") # HACER LAS AYUDASSSSSS
 
 @bot.message_handler(commands=["commands"])
@@ -41,7 +40,6 @@ def constelaciones(message):
 
 @bot.message_handler(commands=["boyero"])
 def boyero(message):
-    print("entra 1")
     grafico_constelacion("Boyero", message.chat.id)
 
 @bot.message_handler(commands=["casiopea"])
@@ -164,7 +162,6 @@ def coeficientes(message):
         photo.close()
 
         if(RRNH.dec_g != 4):
-            print("entra")
             photo = open('sol_p.png', 'rb')
             bot.send_photo(message.chat.id, photo, caption="Esta es la solución particular que resulta del termino g(n)")
             photo.close()

@@ -206,7 +206,6 @@ def exp_particular(dec_g,expr, par):
 
     # Crear una figura con el tamaño ajustado
     fig = plt.figure(figsize=(ancho_figura, alto_figura))
-    print(sol_p)
     # Agregar un texto con la función en modo LaTeX a la figura
     plt.text(0.5, 0.5, "$f_{p}(n) = " + latex(sol_p) + "$", fontsize=16, ha='center')
 
@@ -266,7 +265,6 @@ def solution(expr,init):
 
   # Imprimir la solución
   ec_sol = expr.subs(sol)
-
   # Ajustar el tamaño de la figura según la longitud de la expresión
   longitud_expresion = len(latex(ec_sol))
   ancho_figura = longitud_expresion * 0.1
