@@ -87,7 +87,6 @@ def pedir_grado(message):
             bot.send_message(message.chat.id, "¿Qué tipo de termino no homogeneo es g(n)?🥸\n\t1. Constante\n\t2. Valor n\n\t3. Valor n^2 \n\t4. Raíz de grado n")
             bot.register_next_step_handler(message, grado)
     except ValueError:
-        print("aca")
         bot.send_message(message.chat.id, "Ese tipo de dato no es correcto, miaw miaw! 😿\nIntenta de nuevo con un número")
         rrnh(message)
 
@@ -152,30 +151,49 @@ def coeficientes(message):
         
         if check: 
             RRNH.principal_rrnh()
+        bot.send_photo
         
-        bot.send_message(message.chat.id, "Esta es la función recurrente que ingresaste: ")
-        bot.send_photo(message.chat.id, open('function.png', 'rb'))
+        #bot.send_message(message.chat.id, "Esta es la función recurrente que ingresaste: ")
+        photo = open('function.png', 'rb')
+        bot.send_photo(message.chat.id, photo, caption="Esta es la función recurrente que ingresaste")
+        photo.close()
+        #bot.send_photo(message.chat.id, open('function.png', 'rb'))
 
-        bot.send_message(message.chat.id, "Esta es la solución homogénea que resulta en términos de b: ")
-        bot.send_photo(message.chat.id, open('sol_h.png', 'rb'))
-        
+        photo = open('sol_h.png', 'rb')
+        bot.send_photo(message.chat.id, photo, caption="Esta es la solución homogénea que resulta en términos de b")
+        photo.close()
+
         if(RRNH.dec_g != 4):
-            bot.send_message(message.chat.id, "Esta es la solución particular que resulta del termino g(n): ")
-            bot.send_photo(message.chat.id, open('sol_p.png', 'rb'))
+            print("entra")
+            photo = open('sol_p.png', 'rb')
+            bot.send_photo(message.chat.id, photo, caption="Esta es la solución particular que resulta del termino g(n)")
+            photo.close()
 
-        bot.send_message(message.chat.id, "Esta es la solución general de la función: ")
-        bot.send_photo(message.chat.id, open('expr.png', 'rb'))
+        photo = open('expr.png', 'rb')
+        bot.send_photo(message.chat.id, photo, caption="Esta es la solución general de la función")
+        photo.close()
 
-        bot.send_message(message.chat.id, "Esta es la solución no recurrente de la función en términos de n:")
-        bot.send_photo(message.chat.id, open('ec_sol.png', 'rb'))  
-        
+        photo = open('ec_sol.png', 'rb')
+        bot.send_photo(message.chat.id, photo, caption="Esta es la solución no recurrente de la función en términos de n")
+        photo.close()
+
+        RRNH.dec_g = 0
+        #set variables from RRNH to default
+        RRNH.k = 0
+        RRNH.g = 0
+        RRNH.R = 0
+        RRNH.coeff = []
+        RRNH.init = []
+        RRNH.funcion_p = []
+        RRNH.funcion = []
+ 
     except ValueError:
         bot.send_message(message.chat.id, f"Hubo un error, recuerda que debes ingresar números separados por comas. Intenta de nuevo 🤔")
         bot.register_next_step_handler(message, coeficientes)
     
 
 def pedir_condiciones(message):
-    bot.send_message(message.chat.id, "¿Cuáles son los valores de " + "".join("f(" + str(i) +"), " for i in range(RRNH.k-1)) + f" y f({RRNH.k-1})? Ingresalos separados por espacios o comas.")
+    bot.send_message(message.chat.id, "¿Cuáles son los valores de " + "".join("f(" + str(i) +"), " for i in range(RRNH.k-1)) + f" y f({RRNH.k-1})? Ingresalos separados por comas.")
     bot.register_next_step_handler(message, condiciones_iniciales)
 
 def condiciones_iniciales(message):
@@ -208,20 +226,17 @@ def enviar_archivos(id, src_pic):
     photo = open(src_pic, 'rb')
     bot.send_photo(id, photo)
     photo.close()
-    bot.send_message(id, "Para ver con más detalle, abre este archivo en tu navegador favorito. 🤫Tranquilo, es 100% confiable.")
     document = open('grafico.html', 'rb')
-    bot.send_document(id, document)
+    bot.send_document(id, document, caption="Para ver con más detalle, abre este archivo en tu navegador favorito. 🤫Tranquilo, es 100% confiable.")
     document.close()
     
 def grafico_estrellas(id):
     estrellas()
-    bot.send_message(id, "Aquí tienes un gráfico con todas las estrellas")
-    enviar_archivos(id, "Coordenadas estrellas.png")
+    enviar_archivos(id, "Coordenadas estrellas.png", caption="Aquí tienes un gráfico con todas las estrellas")
 
 def grafico_constelacion(conste, id):
     constelacion(conste)
-    bot.send_message(id, f"Aquí tienes la constelación {conste}")
-    enviar_archivos(id, "Constelacion.png")
+    enviar_archivos(id, "Constelacion.png", caption=f"Aquí tienes la constelación {conste}")
 
 
 bot.polling()

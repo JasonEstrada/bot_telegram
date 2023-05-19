@@ -206,7 +206,7 @@ def exp_particular(dec_g,expr, par):
 
     # Crear una figura con el tamaño ajustado
     fig = plt.figure(figsize=(ancho_figura, alto_figura))
-
+    print(sol_p)
     # Agregar un texto con la función en modo LaTeX a la figura
     plt.text(0.5, 0.5, "$f_{p}(n) = " + latex(sol_p) + "$", fontsize=16, ha='center')
 
@@ -317,12 +317,11 @@ for i in range(k):
     init.append(c)"""
 
 def principal_rrnh():
+  global coeff, n, funcion, funcion_p, init, dec_g, k, g, R
   coefic(k,R, dec_g)
-  print(coeff)
-  function = homogenea(g)   #Imprimir funcion original(function)
+  function = homogenea(g)   
   par = particular(g,dec_g)  
-  expr = exp_homogenea()   #Imprimir foto solucion homogenea(expr)
+  expr = exp_homogenea()  
   expr = exp_particular(dec_g,expr,par)  
-  print(expr) #Imprimir foto solucion particular(sol_p)
-  print_expr(expr) #mandar la foto(Expresion final expr)
-  solution(expr,init)  #mandar las dos fotos, la de la funcion original que ya fue antes guardada(function) y la solucion(ec_sol)
+  print_expr(expr)
+  solution(expr,init)  
