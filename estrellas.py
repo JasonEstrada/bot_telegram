@@ -13,7 +13,7 @@ def crear_grafico(x, y, name, id1, brightness, id2, title_graph, lines, title_pi
     # Agregar los puntos al gráfico
     circles = fig.circle('x', 'y', source=source, size=10)
 
-    # Dibujar lineas
+    # Dibujar linea
     if lines:
         fig.line('x', 'y', source=source, line_width=2)
 
