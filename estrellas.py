@@ -38,7 +38,7 @@ def cargar_datos():
     id_hrn = []
     nombres = []
 
-    with open("bot_telegram\constellations\stars.txt", "r") as f:
+    with open("constellations\stars.txt", "r") as f:
         for line in f:
             data = line.split()
             x_coords.append(float(data[0]))
@@ -58,6 +58,7 @@ def cargar_datos():
         return [x_coords, y_coords, id_hd, brillo, id_hrn, nombres]
 
 
+#Funcion para generar el gráfico de las estrellas cuando se requiera
 def estrellas():
     datos = cargar_datos()
     x_coords = datos[0]
@@ -71,6 +72,7 @@ def estrellas():
                 "Coordenadas de las estrellas", False, "Coordenadas estrellas")
 
 
+#Funcion para generar el gráfico de las constelaciones cuando se requiera
 def constelacion(conste):
     datos = cargar_datos()
     x_coords = datos[0]
@@ -82,7 +84,7 @@ def constelacion(conste):
 
     stars = []
 
-    with open(f"bot_telegram\constellations\{conste}.txt", "r") as f:
+    with open(f"constellations\{conste}.txt", "r") as f:
         for line in f:
             data = line.split(",")
             stars.append(data[0])

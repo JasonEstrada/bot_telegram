@@ -4,8 +4,10 @@ from sympy import *
 from estrellas import estrellas, constelacion
 import RRNH 
 
+#token del bot
 bot = telebot.TeleBot("6141107908:AAEfYAug7bei9kW80EWyvSxlb8jFc9E7kQ4")
 
+# Manejador del comando "/start"
 @bot.message_handler(commands=["start"])
 def start(message):
     audio = open('media/bienvenido.mp3', 'rb')
@@ -17,10 +19,16 @@ def start(message):
     bot.send_message(message.chat.id, "Miaw!👋😺, ¿cómo estás? Estos son los comandos disponibles:")
     comandos(message)
 
+# Manejador del comando "/help"
 @bot.message_handler(commands=["help"])
 def ayuda(message):
-    bot.reply_to(message, "Estas son las ayudas ... ") # HACER LAS AYUDASSSSSS
+    ayuda = ""
+    with open("help.txt", "r", encoding="utf-8") as f:
+        for line in f:
+            ayuda += line
+    bot.reply_to(message, ayuda, parse_mode="Markdown")
 
+# Manejador del comando "/commands"
 @bot.message_handler(commands=["commands"])
 def comandos(message):
     commands_list = ""
@@ -29,15 +37,18 @@ def comandos(message):
             commands_list += line
     bot.reply_to(message, commands_list)
 
+# Manejador del comando "/estrella"
 @bot.message_handler(commands=["estrella"])
 def estrella(message):
     grafico_estrellas(message.chat.id)
 
+# Manejador del comando "/constelaciones"
 @bot.message_handler(commands=["constelaciones"])
 def constelaciones(message):
     constelaciones_list = "/boyero\n/casiopea\n/cazo\n/cygnet\n/geminis\n/hydra\n/osa_mayor\n/osa_menor"
     bot.reply_to(message, f"Elige una constelación 🌌: \n {constelaciones_list}")
 
+# Manejadores de los comandos para cada constelación
 @bot.message_handler(commands=["boyero"])
 def boyero(message):
     grafico_constelacion("Boyero", message.chat.id)
@@ -70,11 +81,13 @@ def osa_mayor(message):
 def osa_menor(message):
     grafico_constelacion("Osa menor", message.chat.id)
 
+# Manejador del comando "/rrnh"
 @bot.message_handler(commands=["rrnh"])
 def rrnh(message):
     bot.send_message(message.chat.id, "¿Cuál es el grado de la función recurrente?")
     bot.register_next_step_handler(message, pedir_grado)
 
+# Manejador para obtener el grado de la función recurrente
 def pedir_grado(message):
     try:
         RRNH.k = int(message.text)
@@ -88,6 +101,7 @@ def pedir_grado(message):
         bot.send_message(message.chat.id, "Ese tipo de dato no es correcto, miaw miaw! 😿\nIntenta de nuevo con un número")
         rrnh(message)
 
+# Manejador para evaluar el tipo de término no homogéneo
 def grado(message):
     try:
         RRNH.dec_g = int(message.text)
@@ -111,6 +125,7 @@ def grado(message):
         bot.register_next_step_handler(message, grado)
     
 
+# Manejador para obtener el valor de la constante
 def constante(message):
     try:
         RRNH.g = int(message.text)
@@ -120,6 +135,7 @@ def constante(message):
         bot.register_next_step_handler(message, constante)
 
 
+# Manejador para obtener el valor de R
 def valor_R(message):
     try:
         RRNH.R = int(message.text)
@@ -129,10 +145,12 @@ def valor_R(message):
         bot.send_message(message.chat.id, "Ese tipo de dato no es correcto, miaw miaw! 😿\nIntenta de nuevo con un número")
         bot.register_next_step_handler(message, valor_R)
 
+# Manejador para obtener los coeficientes
 def pedir_coeficientes(message):
     bot.send_message(message.chat.id, "¿Cuáles son los coeficientes de " + "".join("f(n -" + str(i) +"), " for i in range(RRNH.k, 1, -1)) + f" y f(n-1)? Ingresalos separados por comas.")
     bot.register_next_step_handler(message, coeficientes)
 
+# Manejador de los coeficientes de la funcion y respuestas al usuario
 def coeficientes(message):
     RRNH.coeff = []
     check = true
@@ -148,34 +166,23 @@ def coeficientes(message):
             check = false
         
         if check: 
+            #Se llama a la funcion que realiza todos los cálculos
             RRNH.principal_rrnh()
-        bot.send_photo
         
-        #bot.send_message(message.chat.id, "Esta es la función recurrente que ingresaste: ")
-        photo = open('function.png', 'rb')
-        bot.send_photo(message.chat.id, photo, caption="Esta es la función recurrente que ingresaste")
-        photo.close()
-        #bot.send_photo(message.chat.id, open('function.png', 'rb'))
+            #Respuestas al usuario
+            enviar_foto(message.chat.id,'function.png', "Esta es la función recurrente que ingresaste")
 
-        photo = open('sol_h.png', 'rb')
-        bot.send_photo(message.chat.id, photo, caption="Esta es la solución homogénea que resulta en términos de b")
-        photo.close()
+            enviar_foto(message.chat.id,'sol_h.png', "Esta es la solución homogénea que resulta en términos de b")
 
-        if(RRNH.dec_g != 4):
-            photo = open('sol_p.png', 'rb')
-            bot.send_photo(message.chat.id, photo, caption="Esta es la solución particular que resulta del termino g(n)")
-            photo.close()
+            if(RRNH.dec_g != 4):
+                enviar_foto(message.chat.id, 'sol_p.png', "Esta es la solución particular que resulta del termino g(n)")
 
-        photo = open('expr.png', 'rb')
-        bot.send_photo(message.chat.id, photo, caption="Esta es la solución general de la función")
-        photo.close()
+            enviar_foto(message.chat.id,'expr.png', "Esta es la solución general de la función")
 
-        photo = open('ec_sol.png', 'rb')
-        bot.send_photo(message.chat.id, photo, caption="Esta es la solución no recurrente de la función en términos de n")
-        photo.close()
+            enviar_foto(message.chat.id,'ec_sol.png', "Esta es la solución no recurrente de la función en términos de n")
 
+        #Devolver las variables a sus valores iniciales
         RRNH.dec_g = 0
-        #set variables from RRNH to default
         RRNH.k = 0
         RRNH.g = 0
         RRNH.R = 0
@@ -187,8 +194,14 @@ def coeficientes(message):
     except ValueError:
         bot.send_message(message.chat.id, f"Hubo un error, recuerda que debes ingresar números separados por comas. Intenta de nuevo 🤔")
         bot.register_next_step_handler(message, coeficientes)
-    
 
+#Funcion para enviar fotos con un mensaje
+def enviar_foto(id, src_pic, capt):
+    photo = open(src_pic, 'rb')
+    bot.send_photo(id, photo, caption=capt)
+    photo.close()
+
+# Manejador para obtener las condiciones iniciales
 def pedir_condiciones(message):
     bot.send_message(message.chat.id, "¿Cuáles son los valores de " + "".join("f(" + str(i) +"), " for i in range(RRNH.k-1)) + f" y f({RRNH.k-1})? Ingresalos separados por comas.")
     bot.register_next_step_handler(message, condiciones_iniciales)
@@ -215,25 +228,25 @@ def condiciones_iniciales(message):
 
 @bot.message_handler(func=lambda message:True)
 
-
+#A todo mensaje distinto de los comandos y no esperado se responde con los comandos
 def mensaje(message):
     comandos(message)
 
-def enviar_archivos(id, src_pic):
-    photo = open(src_pic, 'rb')
-    bot.send_photo(id, photo)
-    photo.close()
+#Funcion para enviar los archivos de las constelaciones
+def enviar_archivos(id, src_pic, capt):
+    enviar_foto(id, src_pic, capt)
     document = open('grafico.html', 'rb')
     bot.send_document(id, document, caption="Para ver con más detalle, abre este archivo en tu navegador favorito. 🤫Tranquilo, es 100% confiable.")
     document.close()
-    
+
+#Funcion que llama a la funcion que genera el gráfico de las estrellas
 def grafico_estrellas(id):
     estrellas()
-    enviar_archivos(id, "Coordenadas estrellas.png", caption="Aquí tienes un gráfico con todas las estrellas")
+    enviar_archivos(id, "Coordenadas estrellas.png", "Aquí tienes un gráfico con todas las estrellas")
 
+#Funcion que llama a la funcion que genera los gráfico de las constelaciones
 def grafico_constelacion(conste, id):
     constelacion(conste)
-    enviar_archivos(id, "Constelacion.png", caption=f"Aquí tienes la constelación {conste}")
-
+    enviar_archivos(id, "Constelacion.png", f"Aquí tienes la constelación {conste}")
 
 bot.polling()
