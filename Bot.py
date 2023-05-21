@@ -12,7 +12,7 @@ def start(message):
     audio = open('media/bienvenido.mp3', 'rb')
     bot.send_audio(message.chat.id, audio)
     audio.close()
-    photo = open("media\gato-baile.gif", 'rb')
+    photo = open("media/gato-baile.gif", 'rb')
     bot.send_animation(message.chat.id, photo)
     photo.close()
     bot.send_message(message.chat.id, "Miaw!👋😺, ¿cómo estás? Estos son los comandos disponibles:")
