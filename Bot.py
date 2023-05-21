@@ -1,6 +1,4 @@
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from sympy import *
 from estrellas import estrellas, constelacion
 import RRNH 
 
