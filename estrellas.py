@@ -38,7 +38,7 @@ def cargar_datos():
     id_hrn = []
     nombres = []
 
-    with open("constellations\stars.txt", "r") as f:
+    with open("constellations/stars.txt", "r") as f:
         for line in f:
             data = line.split()
             x_coords.append(float(data[0]))
@@ -84,7 +84,7 @@ def constelacion(conste):
 
     stars = []
 
-    with open(f"constellations\{conste}.txt", "r") as f:
+    with open(f"constellations/{conste}.txt", "r") as f:
         for line in f:
             data = line.split(",")
             stars.append(data[0])
