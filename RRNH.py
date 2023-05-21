@@ -1,16 +1,10 @@
-from sympy import sympify
 from sympy.parsing.sympy_parser import parse_expr
-from sympy import Poly
-import sympy as sp
 from sympy import *
 import numpy as np
-from fractions import Fraction
-from IPython.display import display, Math
 import matplotlib.pyplot as plt
 from sympy import latex
 from decimal import Decimal, ROUND_DOWN
 
-#Global variables
 # Función para aproximar cada elemento de una lista a un cierto número de decimales
 def approx_list(lst, precision):
     return [np.round(x, precision) for x in lst]
@@ -33,8 +27,8 @@ def evaluate_(expr, init):
     lst.append(expr.subs(n, i))
   return lst
 
+#Función para recorrer la lista de coeficientes y modelar las funciones
 def coefic(k,R,dec_g):
-#Llenado de las funciones:Homogenea y  Particular.
   coeff.reverse()
   for i in range(len(coeff)):
     llenado(coeff[i],R,i,dec_g)
@@ -43,6 +37,7 @@ def coefic(k,R,dec_g):
   coeff.reverse()
   coeff.append(1)
 
+#Función para almacenar los términos de las funciones Homogenea y  Particular en listas.
 def llenado(c,R,i,dec_g):
   if c != 0:
     h = f'{str(-c)}*f(n-{i+1})'
@@ -60,7 +55,7 @@ def llenado(c,R,i,dec_g):
       p= f'{str(-c)}*c*{R}**(n-{i+1})'
       funcion_p.append(p)
 
-
+#Función para modelar la función homogenea y guardarla en imagen.
 def homogenea(g):
   global funcion
   #Concatenacion de la funcion homogenea:
@@ -93,6 +88,7 @@ def homogenea(g):
 
   return function
 
+#Función para modelar la función particular y guardarla en imagen.
 def particular(g,dec_g):
   #Acomodar la función que se usará para resolver la parte particular.
   fun_p=""
@@ -104,8 +100,8 @@ def particular(g,dec_g):
   par = parse_expr(fun_p)
   return par
 
+#Función para resolver la parte homogenea en terminos de b_i y guardar la imagen
 def exp_homogenea():
-  #Resolver la parte homogenea para tenerlo en valores b1 y b2
   coeff.reverse()
   roots = np.roots(coeff)
   approx_lst = approx_list(roots, 1)
@@ -161,6 +157,7 @@ def exp_homogenea():
 
   return expr
 
+#Función para resolver la parte particular y guardar la imagen, además devuelve la función en general(particular + homogenea)
 def exp_particular(dec_g,expr, par):
   #Esto se supone que es la forma de resolver la parte particular.
   if dec_g ==1:
@@ -216,6 +213,7 @@ def exp_particular(dec_g,expr, par):
     plt.savefig('sol_p.png', dpi=300, bbox_inches='tight')
   return expr
 
+#Genera la imagen de la función en general.
 def print_expr(expr):
   # Ajustar el tamaño de la figura según la longitud de la expresión
   longitud_expresion = len(latex(expr))
@@ -234,6 +232,7 @@ def print_expr(expr):
   # Guardar la figura en formato PNG
   plt.savefig('expr.png', dpi=300, bbox_inches='tight')
 
+#Función que resuelve la ecuacion general, encontrando las b_i y luego genera la imagen de la función final ya resuelta.
 def solution(expr,init):
   #Ultima resolución para poder tener la no recurrente.
   ec = evaluate_(expr, init)
@@ -294,26 +293,7 @@ k = 0
 g = 0
 R = 0
 
-#Se decide y lee el termino no homogéneo.
-"""dec_g = int(input("Enter the non-homogeneous term type g(n): \n\t1. Constant\n\t2. Value n\n\t3. Value n^2 \n\t4. Root degree n\nYour decision:"))
-if dec_g==1:
-  g = int(input("Enter the value of the constant:"))
-elif dec_g == 2:
-  g = n
-elif dec_g == 3:
-  g = n**2
-elif dec_g == 4:
-  R = int(input("Enter the value of the Root:"))
-  g = R**n
-else:
-  print("Enter a valid number")
-
-print("\n \nNow enter initial conditions: ")
-
-for i in range(k):
-    c = int(input(f" Enter f({i}): "))
-    init.append(c)"""
-
+#Función que es llamada en el bot y que llama las demas funciones.
 def principal_rrnh():
   global coeff, n, funcion, funcion_p, init, dec_g, k, g, R
   coefic(k,R, dec_g)
