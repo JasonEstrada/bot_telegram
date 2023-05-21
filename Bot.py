@@ -1,4 +1,5 @@
 import telebot
+from sympy import *
 from estrellas import estrellas, constelacion
 import RRNH 
 
